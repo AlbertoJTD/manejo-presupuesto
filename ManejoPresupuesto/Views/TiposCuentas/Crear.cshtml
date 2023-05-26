@@ -11,8 +11,8 @@
 
 <form asp-controller="TiposCuentas" asp-action="Crear">
 	<div class="mb-3">
-		<label for="Nombre" class="form-label" asp>Nombre</label>
-		<input id="Nombre" type="text" name="Nombre" class="form-control"/>
+		<label asp-for="Nombre" class="form-label" asp>Nombre</label>
+		<input asp-for="Nombre" type="text" class="form-control" />
 	</div>
 
 	<button type="submit" class="btn btn-primary">Enviar</button>
