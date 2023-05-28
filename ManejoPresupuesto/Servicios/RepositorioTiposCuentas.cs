@@ -6,7 +6,7 @@ namespace ManejoPresupuesto.Servicios
 {
 	public interface IRepositorioTiposCuentas
 	{
-		void Crear(TipoCuenta tipoCuenta);
+		Task Crear(TipoCuenta tipoCuenta);
 	}
 
 	public class RepositorioTiposCuentas: IRepositorioTiposCuentas
@@ -18,13 +18,13 @@ namespace ManejoPresupuesto.Servicios
 			connectionString = configuration.GetConnectionString("DefaultConnection");
 		}
 
-		public void Crear(TipoCuenta tipoCuenta)
+		public async Task Crear(TipoCuenta tipoCuenta)
 		{
 			using var connection = new SqlConnection(connectionString);
 			// obtener id del registro creado
-			var id = connection.QuerySingle<int>($@"INSERT INTO TiposCuentas (Nombre, UsuarioId, Orden)
+			var id = await connection.QuerySingleAsync<int>($@"INSERT INTO TiposCuentas (Nombre, UsuarioId, Orden)
 													VALUES (@Nombre, @UsuarioId, 0);
-													SELECT SCOPE_IDENTITY();", tipoCuenta); // Traes el ID del registro creado
+													SELECT SCOPE_IDENTITY();", tipoCuenta); // Traer el ID del registro creado
 
 			tipoCuenta.Id = id;
 		}
