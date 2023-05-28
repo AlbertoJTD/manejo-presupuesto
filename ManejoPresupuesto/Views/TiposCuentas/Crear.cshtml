@@ -9,7 +9,7 @@
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<form asp-controller="TiposCuentas" asp-action="Crear">
+<form asp-action="Crear">
 	<div class="mb-3">
 		<label asp-for="Nombre" class="form-label" asp>Nombre</label>
 		<input asp-for="Nombre" type="text" class="form-control" />
@@ -17,6 +17,7 @@
 	</div>
 
 	<button type="submit" class="btn btn-primary">Enviar</button>
+	<a class="btn btn-secondary" asp-action="Index">Cancelar</a>
 </form>
 
 
