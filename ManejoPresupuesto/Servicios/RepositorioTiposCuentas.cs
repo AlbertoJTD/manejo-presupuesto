@@ -29,9 +29,9 @@ namespace ManejoPresupuesto.Servicios
 		{
 			using var connection = new SqlConnection(connectionString);
 			// obtener id del registro creado
-			var id = await connection.QuerySingleAsync<int>(@"INSERT INTO TiposCuentas (Nombre, UsuarioId, Orden)
-													VALUES (@Nombre, @UsuarioId, 0);
-													SELECT SCOPE_IDENTITY();", tipoCuenta); // Traer el ID del registro creado
+			var id = await connection.QuerySingleAsync<int>("TiposCuentasInsertar", new {usuarioId = tipoCuenta.UsuarioId,
+																						 nombre = tipoCuenta.Nombre},
+																						 commandType: System.Data.CommandType.StoredProcedure); // Traer el ID del registro creado
 
 			tipoCuenta.Id = id;
 		}
