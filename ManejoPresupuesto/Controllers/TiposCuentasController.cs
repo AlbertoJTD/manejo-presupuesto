@@ -9,15 +9,17 @@ namespace ManejoPresupuesto.Controllers
 	public class TiposCuentasController : Controller
 	{
 		private readonly IRepositorioTiposCuentas repositorioTiposCuentas;
+		private readonly IServicioUsuarios servicioUsuarios;
 
-		public TiposCuentasController(IRepositorioTiposCuentas repositorioTiposCuentas)
+		public TiposCuentasController(IRepositorioTiposCuentas repositorioTiposCuentas, IServicioUsuarios servicioUsuarios)
         {
 			this.repositorioTiposCuentas = repositorioTiposCuentas;
+			this.servicioUsuarios = servicioUsuarios;
 		}
 
 		public async Task<IActionResult> Index()
 		{
-			var usuarioId = 1;
+			var usuarioId = servicioUsuarios.ObtenerUsuarioId();
 			var tiposCuentas = await repositorioTiposCuentas.Obtener(usuarioId);
 			return View(tiposCuentas);
 		}
@@ -34,7 +36,7 @@ namespace ManejoPresupuesto.Controllers
 			{
 				return View(tipoCuenta);
 			}
-			tipoCuenta.UsuarioId = 1;
+			tipoCuenta.UsuarioId = servicioUsuarios.ObtenerUsuarioId();
 
 			var existeTipoCuenta = await repositorioTiposCuentas.Existe(tipoCuenta.Nombre, tipoCuenta.UsuarioId);
 
@@ -52,7 +54,7 @@ namespace ManejoPresupuesto.Controllers
 		[HttpGet]
 		public async Task<IActionResult> VerificarExisteTipoCuenta(string nombre)
 		{
-			var usuarioId = 1;
+			var usuarioId = servicioUsuarios.ObtenerUsuarioId();
 			var existeTipoCuenta = await repositorioTiposCuentas.Existe(nombre, usuarioId);
 
 			if (existeTipoCuenta)
