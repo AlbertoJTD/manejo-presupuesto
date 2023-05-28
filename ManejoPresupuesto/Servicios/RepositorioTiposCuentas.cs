@@ -35,7 +35,7 @@ namespace ManejoPresupuesto.Servicios
 		public async Task<bool> Existe(string nombre, int usuarioId)
 		{
 			using var connection = new SqlConnection(connectionString);
-			var existe = await connection.QueryFirstAsync<int>(@"SELECT 1 FROM TiposCuentas
+			var existe = await connection.QueryFirstOrDefaultAsync<int>(@"SELECT 1 FROM TiposCuentas
 																WHERE Nombre = @Nombre AND UsuarioId = @UsuarioId;",
 																new { nombre, usuarioId });
 			return existe == 1;
