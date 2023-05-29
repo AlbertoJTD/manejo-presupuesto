@@ -63,6 +63,54 @@ namespace ManejoPresupuesto.Controllers
 			return RedirectToAction("Index");
 		}
 
+		public async Task<IActionResult> Editar(int id)
+		{
+			var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+			var cuenta = await repositorioCuentas.ObtenerPorId(id, usuarioId);
+
+			// Validar si la cuenta le pertenece al usuario
+			if (cuenta is null)
+			{
+				return RedirectToAction("NoEncontrado", "Home");
+			}
+
+			// Llenar el nuevo objeto de tipo CuentaCreacionViewModel
+			var modelo = new CuentaCreacionViewModel()
+			{
+				Id = cuenta.Id,
+				Nombre = cuenta.Nombre,
+				TipoCuentaId = cuenta.TipoCuentaId,
+				Descripcion = cuenta.Descripcion,
+				Balance = cuenta.Balance
+			};
+
+			modelo.TiposCuentas = await ObtenerListadoCuentas(usuarioId);
+
+			return View(modelo);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Editar(CuentaCreacionViewModel cuentaEditar)
+		{
+			var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+			var cuenta = await repositorioCuentas.ObtenerPorId(cuentaEditar.Id, usuarioId);
+
+			// Validar si la cuenta le pertenece al usuario
+			if (cuenta is null)
+			{
+				return RedirectToAction("NoEncontrado", "Home");
+			}
+
+			var tipoCuenta = await repositorioTiposCuentas.ObtenerPorId(cuentaEditar.TipoCuentaId, usuarioId);
+			if (tipoCuenta is null)
+			{
+				return RedirectToAction("NoEncontrado", "Home");
+			}
+
+			await repositorioCuentas.Actualizar(cuentaEditar);
+			return RedirectToAction("Index");
+		}
+
 		private async Task<IEnumerable<SelectListItem>> ObtenerListadoCuentas(int usuarioId)
 		{
 			var tiposCuentas = await repositorioTiposCuentas.Obtener(usuarioId);
