@@ -9,7 +9,8 @@ namespace ManejoPresupuesto.Servicios
         Task Actualizar(Categoria categoria);
 		Task Borrar(int id);
 		Task Crear(Categoria categoria);
-        Task<IEnumerable<Categoria>> ObtenerListadoCategorias(int usuarioId);
+		Task<IEnumerable<Categoria>> ObtenerCategoriasTipoOperacion(int usuarioId, TipoOperacion tipoOperacionId);
+		Task<IEnumerable<Categoria>> ObtenerListadoCategorias(int usuarioId);
         Task<Categoria> ObtenerPorId(int id, int usuarioId);
     }
 
@@ -56,6 +57,15 @@ namespace ManejoPresupuesto.Servicios
 		{
 			using var connection = new SqlConnection(connectionString);
 			await connection.ExecuteAsync(@"DELETE Categorias WHERE Id = @Id", new {id});
+		}
+
+		public async Task<IEnumerable<Categoria>> ObtenerCategoriasTipoOperacion(int usuarioId, TipoOperacion tipoOperacionId)
+		{
+			using var connection = new SqlConnection(connectionString);
+			return await connection.QueryAsync<Categoria>(@"SELECT *
+															FROM Categorias
+															WHERE UsuarioId = @usuarioId AND TipoOperacionId = @tipoOperacionId",
+															new { usuarioId, tipoOperacionId });
 		}
 	}
 }

@@ -10,12 +10,14 @@ namespace ManejoPresupuesto.Controllers
 		private readonly IServicioUsuarios servicioUsuarios;
 		private readonly IRepositorioTransacciones repositorioTransacciones;
 		private readonly IRepositorioCuentas repositorioCuentas;
+		private readonly IRepositorioCategorias repositorioCategorias;
 
-		public TransaccionesController(IServicioUsuarios servicioUsuarios, IRepositorioTransacciones repositorioTransacciones, IRepositorioCuentas repositorioCuentas)
+		public TransaccionesController(IServicioUsuarios servicioUsuarios, IRepositorioTransacciones repositorioTransacciones, IRepositorioCuentas repositorioCuentas, IRepositorioCategorias repositorioCategorias)
 		{
 			this.servicioUsuarios = servicioUsuarios;
 			this.repositorioTransacciones = repositorioTransacciones;
 			this.repositorioCuentas = repositorioCuentas;
+			this.repositorioCategorias = repositorioCategorias;
 		}
 
 		public IActionResult Index()
@@ -28,6 +30,7 @@ namespace ManejoPresupuesto.Controllers
 			var usuarioId = servicioUsuarios.ObtenerUsuarioId();
 			var modelo = new TransaccionCreacionViewModel();
 			modelo.Cuentas = await ObtenerCuentas(usuarioId);
+			modelo.Categorias = await ObtenerCategorias(usuarioId, modelo.TipoOperacionId);
 
 			return View(modelo);
 		}
@@ -36,6 +39,20 @@ namespace ManejoPresupuesto.Controllers
 		{
 			var cuentas = await repositorioCuentas.BuscarPorUsuario(usuarioId);
 			return cuentas.Select(x => new SelectListItem(x.Nombre, x.Id.ToString()));
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ObtenerCategorias([FromBody] TipoOperacion tipoOperacion)
+		{
+			var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+			var categorias = await ObtenerCategorias(usuarioId, tipoOperacion);
+			return Ok(categorias);
+		}
+
+		private async Task<IEnumerable<SelectListItem>> ObtenerCategorias(int usuarioId, TipoOperacion tipoOperacion)
+		{
+			var categorias = await repositorioCategorias.ObtenerCategoriasTipoOperacion(usuarioId, tipoOperacion);
+			return categorias.Select(x => new SelectListItem(x.Nombre, x.Id.ToString()));
 		}
 	}
 }
