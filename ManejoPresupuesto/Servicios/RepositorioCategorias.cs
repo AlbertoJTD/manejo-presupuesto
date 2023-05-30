@@ -7,7 +7,8 @@ namespace ManejoPresupuesto.Servicios
 	public interface IRepositorioCategorias
 	{
         Task Actualizar(Categoria categoria);
-        Task Crear(Categoria categoria);
+		Task Borrar(int id);
+		Task Crear(Categoria categoria);
         Task<IEnumerable<Categoria>> ObtenerListadoCategorias(int usuarioId);
         Task<Categoria> ObtenerPorId(int id, int usuarioId);
     }
@@ -50,5 +51,11 @@ namespace ManejoPresupuesto.Servicios
 													SET Nombre = @Nombre, TipoOperacionId = @TipoOperacionId
 													WHERE Id = @Id", categoria);
         }
-    }
+
+		public async Task Borrar(int id)
+		{
+			using var connection = new SqlConnection(connectionString);
+			await connection.ExecuteAsync(@"DELETE Categorias WHERE Id = @Id", new {id});
+		}
+	}
 }
