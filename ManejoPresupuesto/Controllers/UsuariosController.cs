@@ -1,11 +1,18 @@
 ﻿using ManejoPresupuesto.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManejoPresupuesto.Controllers
 {
 	public class UsuariosController : Controller
 	{
-		public IActionResult Index()
+		private readonly UserManager<Usuario> userManager;
+
+		public UsuariosController(UserManager<Usuario> userManager)
+        {
+			this.userManager = userManager;
+		}
+        public IActionResult Index()
 		{
 			return View();
 		}
@@ -22,8 +29,24 @@ namespace ManejoPresupuesto.Controllers
 			{
 				return View(modelo);
 			}
+			var usuario = new Usuario() { Email = modelo.Email };
 
-			return RedirectToAction("Index", "Transacciones");
+			var resultado = await userManager.CreateAsync(usuario, password: modelo.Password);
+
+			if (resultado.Succeeded)
+			{
+				//await signInManager.SignInAsync(usuario, isPersistent: true);
+				return RedirectToAction("Index", "Transacciones");
+			}
+			else
+			{
+				foreach (var error in resultado.Errors)
+				{
+					ModelState.AddModelError(string.Empty, error.Description);
+				}
+
+				return View(modelo);
+			}
 		}
 	}
 }

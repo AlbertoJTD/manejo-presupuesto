@@ -20,7 +20,6 @@ namespace ManejoPresupuesto.Servicios
 
 		public async Task<int> CrearUsuario(Usuario usuario)
 		{
-			//usuario.EmailNormalizado = usuario.Email.ToUpper();
 			using var connection = new SqlConnection(connectionString);
 			var id = await connection.QuerySingleAsync<int>(@"INSERT INTO Usuarios (Email, EmailNormalizado, PasswordHash)
                                                             VALUES (@Email, @EmailNormalizado, @PasswordHash);
