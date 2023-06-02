@@ -1,4 +1,5 @@
 ﻿using ManejoPresupuesto.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,7 @@ namespace ManejoPresupuesto.Controllers
 			this.userManager = userManager;
 			this.signInManager = signInManager;
 		}
+
         public IActionResult Index()
 		{
 			return View();
@@ -50,5 +52,12 @@ namespace ManejoPresupuesto.Controllers
 				return View(modelo);
 			}
 		}
-	}
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return RedirectToAction("Index", "Transacciones");
+        }
+    }
 }
