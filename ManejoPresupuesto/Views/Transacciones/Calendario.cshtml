@@ -18,18 +18,7 @@
 			const calendario = new FullCalendar.Calendar(calendarioEl, {
 				dayMaxEventRows: 3,
 				initialView: 'dayGridMonth',
-				events: [
-				{
-					title: '2,500',
-					start: '2023-06-02',
-					end: '2023-06-02'
-				},
-				{
-					title: '9,500',
-					start: '2023-06-02',
-					end: '2023-06-02',
-					color: 'red'
-				}]
+				events: '/transacciones/ObtenerTransaccionesCalendario'
 			});
 
 			calendario.render()
