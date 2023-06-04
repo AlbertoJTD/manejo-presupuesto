@@ -8,6 +8,7 @@ namespace ManejoPresupuesto.Servicios
 	{
         Task Actualizar(Categoria categoria);
 		Task Borrar(int id);
+		Task<int> ContarRegistros(int usuarioId);
 		Task Crear(Categoria categoria);
 		Task<IEnumerable<Categoria>> ObtenerCategoriasTipoOperacion(int usuarioId, TipoOperacion tipoOperacionId);
 		Task<IEnumerable<Categoria>> ObtenerListadoCategorias(int usuarioId, PaginacionViewModel paginacion);
@@ -69,6 +70,14 @@ namespace ManejoPresupuesto.Servicios
 															FROM Categorias
 															WHERE UsuarioId = @usuarioId AND TipoOperacionId = @tipoOperacionId",
 															new { usuarioId, tipoOperacionId });
+		}
+
+		public async Task<int> ContarRegistros(int usuarioId)
+		{
+			using var connection = new SqlConnection(connectionString);
+			return await connection.ExecuteScalarAsync<int>(@"SELECT COUNT(*)
+															  FROM Categorias
+															  WHERE UsuarioId = @usuarioId", new { usuarioId });
 		}
 	}
 }
