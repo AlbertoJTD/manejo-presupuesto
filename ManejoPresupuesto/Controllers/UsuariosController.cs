@@ -22,12 +22,14 @@ namespace ManejoPresupuesto.Controllers
 			return View();
 		}
 
+		[AllowAnonymous]
 		public IActionResult Registro()
 		{
 			return View();
 		}
 
 		[HttpPost]
+		[AllowAnonymous]
 		public async Task<IActionResult> Registro(RegistroViewModel modelo)
 		{
 			if (!ModelState.IsValid)
@@ -61,13 +63,15 @@ namespace ManejoPresupuesto.Controllers
             return RedirectToAction("Index", "Transacciones");
         }
 
+		[AllowAnonymous]
 		public IActionResult Login()
 		{
 			return View();
 		}
 
 		[HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel modelo)
+		[AllowAnonymous]
+		public async Task<IActionResult> Login(LoginViewModel modelo)
         {
             if (!ModelState.IsValid)
             {
